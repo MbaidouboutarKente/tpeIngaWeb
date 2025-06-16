@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulaire Avancé HTML5</title>
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3f37c9;
+      --success-color: #4cc9f0;
+      --error-color: #f72585;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+      line-height: 1.6;
+      color: var(--dark-color);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: var(--primary-color);
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .form-container {
+      background-color: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    input, button {
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      border-color: var(--primary-color);
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.3s;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: var(--secondary-color);
+    }
+
+    .result {
+      padding: 12px;
+      margin: 15px 0;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .success {
+      background-color: rgba(76, 201, 240, 0.2);
+      color: var(--success-color);
+    }
+
+    .error {
+      background-color: rgba(247, 37, 133, 0.2);
+      color: var(--error-color);
+    }
+
+    .info {
+      background-color: rgba(67, 97, 238, 0.2);
+      color: var(--primary-color);
+    }
+
+    .emoji {
+      margin-right: 8px;
+    }
+
+    @media (min-width: 600px) {
+      .form-row {
+        display: flex;
+        gap: 20px;
+      }
+      
+      .form-group {
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h1>Formulaire Avancé HTML5</h1>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="fullName">Nom complet</label>
+        <input type="text" id="fullName" placeholder="Votre nom complet" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Adresse email</label>
+        <input type="email" id="email" placeholder="exemple@domaine.com" required>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="price">Prix</label>
+        <input type="number" id="price" placeholder="Montant en FCFA" min="0" step="0.01" required>
+      </div>
+
+      <div class="form-group">
+        <label for="date">Date</label>
+        <input type="date" id="date" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <button onclick="calculateTax()">Calculer la taxe (17%)</button>
+      <div id="taxResult" class="result" hidden></div>
+    </div>
+
+    <div class="form-group">
+      <button onclick="showCurrentDate()">Afficher la date actuelle</button>
+      <div id="dateResult" class="result" hidden></div>
+    </div>
+
+    <div class="form-group">
+      <label for="numberToCheck">Vérifier si le nombre existe dans [3, 7, 15, 22]</label>
+      <input type="number" id="numberToCheck" placeholder="Entrez un nombre">
+      <button onclick="checkNumber()">Vérifier le nombre</button>
+      <div id="checkResult" class="result" hidden></div>
+    </div>
+  </div>
+
+  <script>
+    function calculateTax() {
+      const priceInput = document.getElementById('price');
+      const resultElement = document.getElementById('taxResult');
+      
+      if (!priceInput.checkValidity()) {
+        resultElement.textContent = 'Veuillez entrer un prix valide.';
+        resultElement.className = 'result error';
+        resultElement.hidden = false;
+        return;
+      }
+
+      const price = parseFloat(priceInput.value);
+      const tax = price * 0.17;
+      const total = price + tax;
+      
+      resultElement.innerHTML = `
+        <span class="emoji">💰</span>
+        <div>Prix initial: ${price.toFixed(2)} FCFA</div>
+        <div>Taxe (17%): ${tax.toFixed(2)} FCFA</div>
+        <div><strong>Total: ${total.toFixed(2)} FCFA</strong></div>
+      `;
+      resultElement.className = 'result success';
+      resultElement.hidden = false;
+    }
+
+    function showCurrentDate() {
+      const now = new Date();
+      const options = { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      };
+      
+      document.getElementById('dateResult').innerHTML = `
+        <span class="emoji">📅</span>
+        Nous sommes le ${now.toLocaleDateString('fr-FR', options)}
+      `;
+      document.getElementById('dateResult').className = 'result info';
+      document.getElementById('dateResult').hidden = false;
+    }
+
+    function checkNumber() {
+      const arr = [3, 7, 15, 22];
+      const numInput = document.getElementById('numberToCheck');
+      const resultElement = document.getElementById('checkResult');
+      
+      if (!numInput.checkValidity()) {
+        resultElement.textContent = 'Veuillez entrer un nombre valide.';
+        resultElement.className = 'result error';
+        resultElement.hidden = false;
+        return;
+      }
+
+      const num = parseInt(numInput.value, 10);
+      const exists = arr.includes(num);
+      
+      if (exists) {
+        resultElement.innerHTML = `<span class="emoji">✅</span> Le nombre ${num} existe dans la liste [3, 7, 15, 22]`;
+        resultElement.className = 'result success';
+      } else {
+        resultElement.innerHTML = `<span class="emoji">❌</span> Le nombre ${num} n'existe pas dans la liste [3, 7, 15, 22]`;
+        resultElement.className = 'result error';
+      }
+      
+      resultElement.hidden = false;
+    }
+  </script>
+</body>
+</html>
